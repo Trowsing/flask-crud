@@ -33,9 +33,16 @@ flask run
 
 ## Avalible endpoints
 
-- */hello/\<name>* - returns a custom hello message
-- */json/* - returns a dict using `json.dumps`
-- */jsonify/* - returns a dict using `flask.jsonify`
-- */return?\<key>=\<value>* - returns the `value` content
-- */users/* - returns a list of users
-- */users/\<id>* - returns a specific user
+- `GET` */hello/\<name>* - returns a custom hello message
+- `GET` */json/* - returns a dict using `json.dumps`
+- `GET` */jsonify/* - returns a dict using `flask.jsonify`
+- `GET` */return?\<key>=\<value>* - returns the `value` content
+- `GET` */users/* - returns a list of users
+- `GET` */users/\<id>* - returns a specific user
+
+- `POST` */users/* - saves the user according to the given parameters
+    - Parameters: *username*: str, *email*: str, *is_active*: bool
+
+- `PUT` */user/\<id>* - edits a user data
+
+- `DELETE` */user/\<id>* - removes the user from database

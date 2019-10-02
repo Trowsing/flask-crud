@@ -56,15 +56,44 @@ def jsonify_function():
     return jsonify(some_dict)
 
 
-@app.route("/users", methods=["GET"])
-def get_users():
-    users = User.query.all()
-    result = [user.get_dict() for user in users]
+@app.route("/users", methods=["GET", "POST"])
+def users():
+    if request.method == "GET":
+        users = User.query.all()
+        result = [user.get_dict() for user in users]
+
+    elif request.method == "POST":
+        username = request.json["username"]
+        email = request.json["email"]
+        user = User(username=username, email=email)
+        db.session.add(user)
+        db.session.commit()
+        result = user.get_dict()
+
     return jsonify(result)
 
 
-@app.route("/users/<id>", methods=["GET"])
-def get_single_user(id):
-    user = User.query.get(id)
-    result = user.get_dict()
-    return jsonify(result)
+@app.route("/user/<id>", methods=["GET", "PUT", "DELETE"])
+def user(id):
+    if request.method == "GET":
+        user = User.query.get(id)
+        result = user.get_dict()
+        return jsonify(result)
+
+    elif request.method == "PUT":
+        user = User.query.get(id)
+        if "username" in request.json:
+            user.username = request.json["username"]
+        if "email" in request.json:
+            user.email = request.json["email"]
+        if "is_active" in request.json:
+            user.is_active = request.json["is_active"]
+        db.session.add(user)
+        db.session.commit()
+        return jsonify(user.get_dict())
+
+    elif request.method == "DELETE":
+        user = User.query.get(id)
+        db.session.delete(user)
+        db.session.commit()
+        return jsonify({"success": True})
